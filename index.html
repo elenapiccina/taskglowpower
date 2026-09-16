@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ADHD Goals Dashboard Widget for Notion</title>
+
+<!-- Fonts: Plus Jakarta Sans & Inter -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --bg-page: #F6F7FB;
+    --text-primary: #1E2025;
+    --text-muted: #8A8F9E;
+    --text-sub: #636877;
+
+    /* Custom Color Themes from your palette */
+    /* Small Goals: #FAB2C0 */
+    --small-col-bg: rgba(250, 178, 192, 0.38);
+    --small-col-border: rgba(250, 178, 192, 0.6);
+    --small-badge-bg: rgba(250, 178, 192, 0.75);
+    --small-accent: #E05C77;
+
+    /* Big Goals: #FCFECF */
+    --big-col-bg: rgba(252, 254, 207, 0.55);
+    --big-col-border: rgba(230, 235, 160, 0.7);
+    --big-badge-bg: rgba(245, 248, 175, 0.85);
+    --big-accent: #92991C;
+
+    /* Future Goals: #F2E3EA */
+    --future-col-bg: rgba(242, 227, 234, 0.48);
+    --future-col-border: rgba(242, 227, 234, 0.8);
+    --future-badge-bg: rgba(242, 227, 234, 0.85);
+    --future-accent: #A86B8C;
+
+    --card-bg: #FFFFFF;
+    --card-shadow: 0 4px 18px rgba(0, 0, 0, 0.03), 0 1px 3px rgba(0, 0, 0, 0.02);
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    background-color: var(--bg-page);
+    color: var(--text-primary);
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    padding: 18px 22px;
+    min-height: 100vh;
+    width: 100%;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* TOP HEADER DASHBOARD BAR */
+  .dashboard-header {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    border-radius: 16px;
+    padding: 12px 20px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+  }
+
+  .header-title-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .header-icon {
+    font-size: 1.4rem;
+    line-height: 1;
+  }
+
+  .header-titles h1 {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    letter-spacing: -0.02em;
+  }
+
+  .header-titles p {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .progress-pill {
+    background: #FFFFFF;
+    border: 1px solid rgba(0,0,0,0.06);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #4B5060;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.02);
+  }
+
+  .btn-primary {
+    background: #1E2025;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 10px;
+    padding: 8px 16px;
+    font-size: 0.83rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.15s ease;
+  }
+  .btn-primary:hover {
+    background: #333742;
+    transform: translateY(-1px);
+  }
+
+  .btn-icon-only {
+    background: #FFFFFF;
+    border: 1px solid rgba(0,0,0,0.06);
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--text-sub);
+    transition: all 0.15s ease;
+  }
+  .btn-icon-only:hover {
+    background: #F0F2F6;
+  }
+
+  /* MAIN THREE-COLUMN BOARD LAYOUT */
+  .board-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    align-items: start;
+    width: 100%;
+  }
+
+  /* Translucent Colored Column Container */
+  .column {
+    border-radius: 22px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    min-height: 520px;
+    backdrop-filter: blur(8px);
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
+  }
+
+  /* Custom Translucent Colors */
+  .col-small {
+    background: var(--small-col-bg);
+    border-color: var(--small-col-border);
+  }
+  .col-big {
+    background: var(--big-col-bg);
+    border-color: var(--big-col-border);
+  }
+  .col-future {
+    background: var(--future-col-bg);
+    border-color: var(--future-col-border);
+  }
+
+  /* Column Header */
+  .col-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 2px 4px;
+  }
+
+  .col-header-left {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .col-title-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .col-title {
+    font-size: 1.05rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+
+  .col-subtitle {
+    font-size: 0.74rem;
+    color: var(--text-sub);
+    font-weight: 500;
+    padding-left: 24px;
+  }
+
+  .col-header-right {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .count-badge {
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 12px;
+    padding: 2px 8px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--text-sub);
+  }
+
+  .btn-add-quick {
+    background: rgba(255, 255, 255, 0.75);
+    border: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s;
+  }
+  .btn-add-quick:hover {
+    background: #FFFFFF;
+  }
+
+  /* Task Feed inside Column */
+  .task-feed {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    flex: 1;
+    min-height: 100px;
+  }
+
+  /* Goal Cards */
+  .card {
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 16px;
+    box-shadow: var(--card-shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    cursor: grab;
+    user-select: none;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+    border: 1px solid rgba(0,0,0,0.03);
+    position: relative;
+  }
+
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+  }
+
+  .card.dragging {
+    opacity: 0.4;
+    cursor: grabbing;
+  }
+
+  .card-top {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .card-title-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .card-title {
+    font-size: 0.94rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.3;
+    outline: none;
+    border-radius: 4px;
+    padding: 1px 3px;
+  }
+  .card-title:focus {
+    background: rgba(0,0,0,0.03);
+  }
+
+  .card-timeframe {
+    font-size: 0.73rem;
+    color: var(--text-muted);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .btn-card-del {
+    background: none;
+    border: none;
+    color: #D0C9D4;
+    font-size: 0.85rem;
+    cursor: pointer;
+    line-height: 1;
+    opacity: 0;
+    transition: opacity 0.15s, color 0.15s;
+  }
+  .card:hover .btn-card-del {
+    opacity: 1;
+  }
+  .btn-card-del:hover {
+    color: #D93838;
+  }
+
+  /* Subtasks / ADHD Chunking Items */
+  .subtasks-container {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 2px;
+  }
+
+  .subtask-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 0.78rem;
+    color: var(--text-sub);
+    line-height: 1.35;
+  }
+
+  .subtask-dot {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    line-height: 1;
+    user-select: none;
+  }
+
+  .subtask-checkbox {
+    width: 13px;
+    height: 13px;
+    border-radius: 3px;
+    border: 1.5px solid #C4C8D4;
+    cursor: pointer;
+    margin-top: 2px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+  }
+  .subtask-checkbox.checked {
+    background: #3A3D4A;
+    border-color: #3A3D4A;
+  }
+  .subtask-checkbox.checked::after {
+    content: '';
+    width: 3px;
+    height: 6px;
+    border: solid white;
+    border-width: 0 1.5px 1.5px 0;
+    transform: rotate(45deg);
+    margin-bottom: 1px;
+  }
+
+  .subtask-text {
+    flex: 1;
+    outline: none;
+  }
+  .subtask-text.completed {
+    text-decoration: line-through;
+    color: var(--text-muted);
+  }
+
+  .btn-add-subtask {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: left;
+    padding: 2px 0;
+    width: fit-content;
+    transition: color 0.15s;
+  }
+  .btn-add-subtask:hover {
+    color: var(--text-primary);
+  }
+
+  /* Progress Bar */
+  .card-progress-bar {
+    width: 100%;
+    height: 4px;
+    background: #F0F2F6;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .card-progress-fill {
+    height: 100%;
+    background: #3A3D4A;
+    border-radius: 2px;
+    transition: width 0.25s ease;
+  }
+
+  /* Card Bottom Control Bar */
+  .card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 4px;
+  }
+
+  /* Status Dropdown Pill */
+  .status-pill {
+    appearance: none;
+    -webkit-appearance: none;
+    border: none;
+    border-radius: 12px;
+    padding: 4px 10px;
+    font-size: 0.74rem;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    outline: none;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: opacity 0.15s;
+  }
+
+  .status-pill.in-progress {
+    background: #FFF4D9;
+    color: #B27B00;
+  }
+  .status-pill.started {
+    background: #FDE8F0;
+    color: #C03867;
+  }
+  .status-pill.not-started {
+    background: #EBF3FE;
+    color: #1A64D8;
+  }
+  .status-pill.done {
+    background: #E4F7EC;
+    color: #167D44;
+  }
+
+  /* Category Tag Pill */
+  .category-pill {
+    border-radius: 10px;
+    padding: 3px 8px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .col-small .category-pill {
+    background: var(--small-badge-bg);
+    color: #7A2839;
+  }
+  .col-big .category-pill {
+    background: var(--big-badge-bg);
+    color: #555909;
+  }
+  .col-future .category-pill {
+    background: var(--future-badge-bg);
+    color: #633650;
+  }
+
+  /* Dynamic Goal Input Modal Overlay */
+  .modal-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(4px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+  }
+  .modal-overlay.active {
+    display: flex;
+  }
+
+  .modal-card {
+    background: #FFFFFF;
+    border-radius: 20px;
+    padding: 24px;
+    width: 100%;
+    max-width: 440px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .modal-card h3 {
+    font-size: 1.1rem;
+    font-weight: 800;
+  }
+
+  .modal-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .modal-field label {
+    font-size: 0.76rem;
+    font-weight: 700;
+    color: var(--text-muted);
+  }
+  .modal-field input, .modal-field select, .modal-field textarea {
+    border: 1px solid #E2E5ED;
+    border-radius: 10px;
+    padding: 8px 12px;
+    font-family: inherit;
+    font-size: 0.86rem;
+    outline: none;
+  }
+  .modal-field input:focus {
+    border-color: #1E2025;
+  }
+
+  .modal-btns {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 6px;
+  }
+  .btn-sec {
+    background: #F0F2F6;
+    color: var(--text-primary);
+    border: none;
+    border-radius: 10px;
+    padding: 8px 14px;
+    font-size: 0.83rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  @media (max-width: 860px) {
+    .board-container {
+      grid-template-columns: 1fr;
+    }
+    .dashboard-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+    }
+  }
+</style>
+</head>
+<body>
+
+  <!-- DASHBOARD HEADER BAR -->
+  <header class="dashboard-header">
+    <div class="header-title-group">
+      <span class="header-icon">🎯</span>
+      <div class="header-titles">
+        <h1>Goals Dashboard</h1>
+        <p>ADHD Low-Friction Focus Tracker • Step-by-Step Chunking</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <div class="progress-pill" id="overallProgress">
+        🏆 <span id="doneCount">0</span>/<span id="totalCount">0</span> Goals Done
+      </div>
+      <button class="btn-primary" onclick="openAddModal()">+ Add Goal</button>
+      <button class="btn-icon-only" onclick="resetBoard()" title="Reset default board">↻</button>
+    </div>
+  </header>
+
+  <!-- THREE-COLUMN HORIZONTAL BOARD -->
+  <main class="board-container">
+
+    <!-- SMALL GOALS COLUMN (#FAB2C0 Translucent) -->
+    <section class="column col-small" data-col="small">
+      <div class="col-header">
+        <div class="col-header-left">
+          <div class="col-title-group">
+            <span>🌱</span>
+            <h2 class="col-title">Small Goals</h2>
+          </div>
+          <p class="col-subtitle">Quick Wins • 1 to 7 Days</p>
+        </div>
+        <div class="col-header-right">
+          <span class="count-badge" id="count-small">0</span>
+          <button class="btn-add-quick" onclick="openAddModal('small')" title="Quick add goal">+</button>
+        </div>
+      </div>
+      <div class="task-feed" id="feed-small"></div>
+    </section>
+
+    <!-- BIG GOALS COLUMN (#FCFECF Translucent) -->
+    <section class="column col-big" data-col="big">
+      <div class="col-header">
+        <div class="col-header-left">
+          <div class="col-title-group">
+            <span>⚡</span>
+            <h2 class="col-title">Big Goals</h2>
+          </div>
+          <p class="col-subtitle">Core Focus • 1 to 3 Months</p>
+        </div>
+        <div class="col-header-right">
+          <span class="count-badge" id="count-big">0</span>
+          <button class="btn-add-quick" onclick="openAddModal('big')" title="Quick add goal">+</button>
+        </div>
+      </div>
+      <div class="task-feed" id="feed-big"></div>
+    </section>
+
+    <!-- FUTURE GOALS COLUMN (#F2E3EA Translucent) -->
+    <section class="column col-future" data-col="future">
+      <div class="col-header">
+        <div class="col-header-left">
+          <div class="col-title-group">
+            <span>✨</span>
+            <h2 class="col-title">Future Goals</h2>
+          </div>
+          <p class="col-subtitle">Someday & Vision Board</p>
+        </div>
+        <div class="col-header-right">
+          <span class="count-badge" id="count-future">0</span>
+          <button class="btn-add-quick" onclick="openAddModal('future')" title="Quick add goal">+</button>
+        </div>
+      </div>
+      <div class="task-feed" id="feed-future"></div>
+    </section>
+
+  </main>
+
+  <!-- ADD GOAL MODAL -->
+  <div class="modal-overlay" id="goalModal">
+    <div class="modal-card">
+      <h3>Add New Goal</h3>
+      <div class="modal-field">
+        <label>Goal Title</label>
+        <input type="text" id="modalTitle" placeholder="e.g., Organize Workspace" required>
+      </div>
+      <div class="modal-field">
+        <label>Target Horizon / Date</label>
+        <input type="text" id="modalTimeframe" placeholder="e.g., By Tomorrow, Q3 Goal, Someday">
+      </div>
+      <div class="modal-field">
+        <label>Category Column</label>
+        <select id="modalColumn">
+          <option value="small">Small Goals (Quick Wins)</option>
+          <option value="big">Big Goals (1-3 Months)</option>
+          <option value="future">Future Goals (Someday)</option>
+        </select>
+      </div>
+      <div class="modal-field">
+        <label>Sub-steps / Breakdown (comma separated)</label>
+        <input type="text" id="modalSubtasks" placeholder="Step 1, Step 2, Step 3">
+      </div>
+      <div class="modal-btns">
+        <button class="btn-sec" onclick="closeAddModal()">Cancel</button>
+        <button class="btn-primary" onclick="submitNewGoal()">Create Goal</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+  // DEFAULT DATA MATCHING YOUR EXACT SCREENSHOT CONTENT
+  const DEFAULT_BOARD = {
+    small: [
+      {
+        id: "s1",
+        title: "Organize Workspace",
+        timeframe: "By Tomorrow",
+        status: "In Progress",
+        subtasks: [
+          { text: "Clear off desk surface", done: false },
+          { text: "Sort stray papers", done: false },
+          { text: "Wipe down keyboard", done: false }
+        ]
+      },
+      {
+        id: "s2",
+        title: "Drink 2L Water Daily",
+        timeframe: "Daily Habit",
+        status: "Started",
+        subtasks: [
+          { text: "Fill water bottle in morning", done: false },
+          { text: "Set gentle reminder phone timers", done: false }
+        ]
+      }
+    ],
+    big: [
+      {
+        id: "b1",
+        title: "Launch Personal Portfolio",
+        timeframe: "End of Month",
+        status: "In Progress",
+        subtasks: [
+          { text: "Design homepage layout", done: false },
+          { text: "Write project write-ups", done: false },
+          { text: "Publish live link", done: false }
+        ]
+      },
+      {
+        id: "b2",
+        title: "Read 3 Focus Books",
+        timeframe: "Q3 Goal",
+        status: "Not Started",
+        subtasks: [
+          { text: "Atomic Habits", done: false },
+          { text: "Stolen Focus", done: false },
+          { text: "Hyperfocus", done: false }
+        ]
+      },
+      {
+        id: "b3",
+        title: "start notion sale",
+        timeframe: "",
+        status: "Not Started",
+        subtasks: []
+      }
+    ],
+    future: [
+      {
+        id: "f1",
+        title: "Trip to Japan",
+        timeframe: "Someday Vision",
+        status: "Not Started",
+        subtasks: [
+          { text: "Save travel budget", done: false },
+          { text: "Research Kyoto itineraries", done: false },
+          { text: "Learn basic travel phrases", done: false }
+        ]
+      },
+      {
+        id: "f2",
+        title: "start notion sale",
+        timeframe: "",
+        status: "Not Started",
+        subtasks: []
+      }
+    ]
+  };
+
+  let boardData = JSON.parse(localStorage.getItem('adhd_notion_goals_dashboard')) || DEFAULT_BOARD;
+
+  function saveBoard() {
+    localStorage.setItem('adhd_notion_goals_dashboard', JSON.stringify(boardData));
+    updateGlobalHeader();
+  }
+
+  function updateGlobalHeader() {
+    let total = 0;
+    let done = 0;
+    ['small', 'big', 'future'].forEach(col => {
+      total += boardData[col].length;
+      done += boardData[col].filter(t => t.status === 'Done').length;
+      document.getElementById(`count-${col}`).innerText = boardData[col].length;
+    });
+    document.getElementById('totalCount').innerText = total;
+    document.getElementById('doneCount').innerText = done;
+  }
+
+  function getStatusClass(status) {
+    switch(status) {
+      case 'In Progress': return 'in-progress';
+      case 'Started': return 'started';
+      case 'Done': return 'done';
+      default: return 'not-started';
+    }
+  }
+
+  function renderBoard() {
+    ['small', 'big', 'future'].forEach(col => {
+      const feed = document.getElementById(`feed-${col}`);
+      feed.innerHTML = '';
+
+      boardData[col].forEach((task, index) => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.draggable = true;
+        card.dataset.id = task.id;
+        card.dataset.col = col;
+        card.dataset.index = index;
+
+        // Compute subtasks completed count
+        const totalSub = task.subtasks ? task.subtasks.length : 0;
+        const doneSub = task.subtasks ? task.subtasks.filter(s => s.done).length : 0;
+        const progressPercent = totalSub > 0 ? (doneSub / totalSub) * 100 : (task.status === 'Done' ? 100 : 0);
+
+        // Subtasks HTML
+        let subtasksHTML = '';
+        if (task.subtasks && task.subtasks.length > 0) {
+          subtasksHTML = `
+            <div class="subtasks-container">
+              ${task.subtasks.map((st, sIdx) => `
+                <div class="subtask-item">
+                  <div class="subtask-checkbox ${st.done ? 'checked' : ''}" onclick="toggleSubtask('${col}', '${task.id}', ${sIdx})"></div>
+                  <span class="subtask-text ${st.done ? 'completed' : ''}" contenteditable="true" onblur="updateSubtaskText('${col}', '${task.id}', ${sIdx}, this.innerText)">${escapeHtml(st.text)}</span>
+                </div>
+              `).join('')}
+            </div>
+          `;
+        }
+
+        const tagLabel = col === 'small' ? '🌱 Small' : (col === 'big' ? '⚡ Big' : '✨ Future');
+
+        card.innerHTML = `
+          <div class="card-top">
+            <div class="card-title-row">
+              <span class="card-title" contenteditable="true" onblur="updateTitle('${col}', '${task.id}', this.innerText)">${escapeHtml(task.title)}</span>
+              <button class="btn-card-del" onclick="deleteTask('${col}', '${task.id}')" title="Delete goal">✕</button>
+            </div>
+            ${task.timeframe ? `<div class="card-timeframe">🕒 ${escapeHtml(task.timeframe)}</div>` : ''}
+          </div>
+
+          ${subtasksHTML}
+
+          <button class="btn-add-subtask" onclick="addSubtaskPrompt('${col}', '${task.id}')">+ Add sub-step</button>
+
+          ${totalSub > 0 ? `
+            <div class="card-progress-bar">
+              <div class="card-progress-fill" style="width: ${progressPercent}%"></div>
+            </div>
+          ` : ''}
+
+          <div class="card-footer">
+            <select class="status-pill ${getStatusClass(task.status)}" onchange="changeStatus('${col}', '${task.id}', this.value)">
+              <option value="Not Started" ${task.status === 'Not Started' ? 'selected' : ''}>🔵 Not Started</option>
+              <option value="Started" ${task.status === 'Started' ? 'selected' : ''}>🌸 Started</option>
+              <option value="In Progress" ${task.status === 'In Progress' ? 'selected' : ''}>⚡ In Progress</option>
+              <option value="Done" ${task.status === 'Done' ? 'selected' : ''}>✨ Done</option>
+            </select>
+            <span class="category-pill">${tagLabel}</span>
+          </div>
+        `;
+
+        attachDragEvents(card);
+        feed.appendChild(card);
+      });
+    });
+
+    updateGlobalHeader();
+  }
+
+  /* Task Update Functions */
+  function changeStatus(col, id, newStatus) {
+    const task = boardData[col].find(t => t.id === id);
+    if (task) {
+      task.status = newStatus;
+      saveBoard();
+      renderBoard();
+    }
+  }
+
+  function toggleSubtask(col, taskId, subIdx) {
+    const task = boardData[col].find(t => t.id === taskId);
+    if (task && task.subtasks[subIdx]) {
+      task.subtasks[subIdx].done = !task.subtasks[subIdx].done;
+      saveBoard();
+      renderBoard();
+    }
+  }
+
+  function updateSubtaskText(col, taskId, subIdx, newText) {
+    const task = boardData[col].find(t => t.id === taskId);
+    if (task && task.subtasks[subIdx]) {
+      task.subtasks[subIdx].text = newText.trim();
+      saveBoard();
+    }
+  }
+
+  function updateTitle(col, taskId, newTitle) {
+    const task = boardData[col].find(t => t.id === taskId);
+    if (task && newTitle.trim()) {
+      task.title = newTitle.trim();
+      saveBoard();
+    }
+  }
+
+  function addSubtaskPrompt(col, taskId) {
+    const text = prompt("Enter a small step for this goal:");
+    if (text && text.trim()) {
+      const task = boardData[col].find(t => t.id === taskId);
+      if (task) {
+        if (!task.subtasks) task.subtasks = [];
+        task.subtasks.push({ text: text.trim(), done: false });
+        saveBoard();
+        renderBoard();
+      }
+    }
+  }
+
+  function deleteTask(col, id) {
+    boardData[col] = boardData[col].filter(t => t.id !== id);
+    saveBoard();
+    renderBoard();
+  }
+
+  /* Modal Add Goal Logic */
+  let currentModalCol = 'small';
+  function openAddModal(col = 'small') {
+    currentModalCol = col;
+    document.getElementById('modalColumn').value = col;
+    document.getElementById('modalTitle').value = '';
+    document.getElementById('modalTimeframe').value = '';
+    document.getElementById('modalSubtasks').value = '';
+    document.getElementById('goalModal').classList.add('active');
+  }
+
+  function closeAddModal() {
+    document.getElementById('goalModal').classList.remove('active');
+  }
+
+  function submitNewGoal() {
+    const title = document.getElementById('modalTitle').value.trim();
+    if (!title) return;
+
+    const timeframe = document.getElementById('modalTimeframe').value.trim();
+    const targetCol = document.getElementById('modalColumn').value;
+    const subtasksRaw = document.getElementById('modalSubtasks').value.trim();
+
+    const subtasks = subtasksRaw ? subtasksRaw.split(',').map(s => ({ text: s.trim(), done: false })) : [];
+
+    boardData[targetCol].push({
+      id: Date.now().toString(),
+      title,
+      timeframe,
+      status: 'Not Started',
+      subtasks
+    });
+
+    saveBoard();
+    renderBoard();
+    closeAddModal();
+  }
+
+  function resetBoard() {
+    if (confirm("Reset board back to default template?")) {
+      boardData = JSON.parse(JSON.stringify(DEFAULT_BOARD));
+      saveBoard();
+      renderBoard();
+    }
+  }
+
+  function escapeHtml(str) {
+    return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  }
+
+  /* Drag & Drop Reordering Across Columns */
+  let draggedCard = null;
+
+  function attachDragEvents(card) {
+    card.addEventListener('dragstart', (e) => {
+      draggedCard = card;
+      card.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    });
+
+    card.addEventListener('dragend', () => {
+      if (draggedCard) draggedCard.classList.remove('dragging');
+      draggedCard = null;
+    });
+  }
+
+  document.querySelectorAll('.column').forEach(colEl => {
+    colEl.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+    });
+
+    colEl.addEventListener('drop', (e) => {
+      e.preventDefault();
+      if (!draggedCard) return;
+
+      const sourceCol = draggedCard.dataset.col;
+      const targetCol = colEl.dataset.col;
+      const taskId = draggedCard.dataset.id;
+
+      const taskIndex = boardData[sourceCol].findIndex(t => t.id === taskId);
+      const [movedTask] = boardData[sourceCol].splice(taskIndex, 1);
+
+      boardData[targetCol].push(movedTask);
+
+      saveBoard();
+      renderBoard();
+    });
+  });
+
+  // Initial Render
+  renderBoard();
+</script>
+</body>
+</html>
