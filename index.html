@@ -1,4 +1,4 @@
-  <!DOCTYPE html>
+      <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -17,18 +17,15 @@
     --text-muted: #8A8F9E;
     --text-sub: #636877;
 
-    /* Custom Color Themes */
-    /* Small Goals: #FAB2C0 Translucent */
+    /* Custom Column Translucent Colors */
     --small-col-bg: rgba(250, 178, 192, 0.38);
     --small-col-border: rgba(250, 178, 192, 0.6);
     --small-badge-bg: rgba(250, 178, 192, 0.75);
 
-    /* Big Goals: #FCFECF Translucent */
     --big-col-bg: rgba(252, 254, 207, 0.55);
     --big-col-border: rgba(230, 235, 160, 0.7);
     --big-badge-bg: rgba(245, 248, 175, 0.85);
 
-    /* Future Goals: #F2E3EA Translucent */
     --future-col-bg: rgba(242, 227, 234, 0.48);
     --future-col-border: rgba(242, 227, 234, 0.8);
     --future-badge-bg: rgba(242, 227, 234, 0.85);
@@ -53,7 +50,7 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  /* TOP HEADER DASHBOARD BAR */
+  /* TOP HEADER BAR */
   .dashboard-header {
     background: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(12px);
@@ -263,10 +260,9 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
-    cursor: grab;
-    user-select: none;
     transition: transform 0.15s ease, box-shadow 0.15s ease;
     border: 1px solid rgba(0,0,0,0.03);
+    position: relative;
   }
 
   .card:hover {
@@ -275,21 +271,40 @@
   }
 
   .card.dragging {
-    opacity: 0.4;
-    cursor: grabbing;
+    opacity: 0.35;
   }
 
   .card-top {
     display: flex;
     flex-direction: column;
-    gap: 3px;
+    gap: 4px;
   }
 
   .card-title-row {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    gap: 8px;
+    gap: 6px;
+  }
+
+  .title-left {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    flex: 1;
+  }
+
+  .drag-handle {
+    cursor: grab;
+    color: #C2C6D0;
+    font-size: 0.85rem;
+    line-height: 1.3;
+    user-select: none;
+    padding-top: 1px;
+    transition: color 0.15s;
+  }
+  .card:hover .drag-handle {
+    color: #7A8092;
   }
 
   .card-title {
@@ -299,10 +314,12 @@
     line-height: 1.3;
     outline: none;
     border-radius: 4px;
-    padding: 1px 3px;
+    padding: 1px 4px;
+    flex: 1;
+    cursor: text;
   }
   .card-title:focus {
-    background: rgba(0,0,0,0.03);
+    background: #F2F4F8;
   }
 
   .card-timeframe {
@@ -312,6 +329,7 @@
     display: flex;
     align-items: center;
     gap: 4px;
+    padding-left: 18px;
   }
 
   .btn-card-del {
@@ -377,6 +395,12 @@
   .subtask-text {
     flex: 1;
     outline: none;
+    cursor: text;
+    padding: 1px 3px;
+    border-radius: 3px;
+  }
+  .subtask-text:focus {
+    background: #F2F4F8;
   }
   .subtask-text.completed {
     text-decoration: line-through;
@@ -401,7 +425,6 @@
     color: #D93838;
   }
 
-  /* Sleek Add Subtask Action Button */
   .btn-add-subtask {
     background: none;
     border: none;
@@ -443,9 +466,11 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding-top: 2px;
+    padding-top: 4px;
+    gap: 6px;
   }
 
+  /* UPDATED STATUS PILL STYLING */
   .status-pill {
     appearance: none;
     -webkit-appearance: none;
@@ -457,13 +482,57 @@
     font-family: inherit;
     cursor: pointer;
     outline: none;
-    transition: opacity 0.15s;
+    transition: all 0.15s ease;
   }
 
-  .status-pill.in-progress { background: #FFF4D9; color: #B27B00; }
-  .status-pill.started { background: #FDE8F0; color: #C03867; }
-  .status-pill.not-started { background: #EAECEF; color: #4A505E; }
-  .status-pill.done { background: #E4F7EC; color: #167D44; }
+  /* IN PROGRESS -> PINK WITH FLOWER */
+  .status-pill.in-progress {
+    background: #FDE8F0;
+    color: #C03867;
+  }
+
+  /* STARTED -> YELLOW */
+  .status-pill.started {
+    background: #FFF4D9;
+    color: #8C6500;
+  }
+
+  .status-pill.not-started {
+    background: #EAECEF;
+    color: #4A505E;
+  }
+
+  .status-pill.done {
+    background: #E4F7EC;
+    color: #167D44;
+  }
+
+  /* Column Move Shift Buttons */
+  .move-group {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .btn-move {
+    background: rgba(0, 0, 0, 0.04);
+    border: none;
+    border-radius: 6px;
+    width: 20px;
+    height: 20px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--text-sub);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s, color 0.15s;
+  }
+  .btn-move:hover {
+    background: rgba(0, 0, 0, 0.1);
+    color: var(--text-primary);
+  }
 
   .category-pill {
     border-radius: 10px;
@@ -655,6 +724,8 @@
   </div>
 
 <script>
+  const COLS = ['small', 'big', 'future'];
+
   const DEFAULT_BOARD = {
     small: [
       {
@@ -742,7 +813,7 @@
   function updateGlobalHeader() {
     let total = 0;
     let done = 0;
-    ['small', 'big', 'future'].forEach(col => {
+    COLS.forEach(col => {
       total += boardData[col].length;
       done += boardData[col].filter(t => t.status === 'Done').length;
       document.getElementById(`count-${col}`).innerText = boardData[col].length;
@@ -761,11 +832,11 @@
   }
 
   function renderBoard() {
-    ['small', 'big', 'future'].forEach(col => {
+    COLS.forEach(col => {
       const feed = document.getElementById(`feed-${col}`);
       feed.innerHTML = '';
 
-      boardData[col].forEach((task, index) => {
+      boardData[col].forEach((task) => {
         const card = document.createElement('div');
         card.className = 'card';
         card.draggable = true;
@@ -776,7 +847,6 @@
         const doneSub = task.subtasks ? task.subtasks.filter(s => s.done).length : 0;
         const progressPercent = totalSub > 0 ? (doneSub / totalSub) * 100 : (task.status === 'Done' ? 100 : 0);
 
-        // ONLY render subtasks container if array has items
         let subtasksHTML = '';
         if (task.subtasks && task.subtasks.length > 0) {
           subtasksHTML = `
@@ -784,7 +854,10 @@
               ${task.subtasks.map((st, sIdx) => `
                 <div class="subtask-item">
                   <div class="subtask-checkbox ${st.done ? 'checked' : ''}" onclick="toggleSubtask('${col}', '${task.id}', ${sIdx})"></div>
-                  <span class="subtask-text ${st.done ? 'completed' : ''}" contenteditable="true" onblur="updateSubtaskText('${col}', '${task.id}', ${sIdx}, this.innerText)">${escapeHtml(st.text)}</span>
+                  <span class="subtask-text ${st.done ? 'completed' : ''}" 
+                        contenteditable="true" 
+                        onfocus="card.draggable = false"
+                        onblur="card.draggable = true; updateSubtaskText('${col}', '${task.id}', ${sIdx}, this.innerText)">${escapeHtml(st.text)}</span>
                   <button class="btn-subtask-del" onclick="deleteSubtask('${col}', '${task.id}', ${sIdx})" title="Remove step">✕</button>
                 </div>
               `).join('')}
@@ -797,7 +870,13 @@
         card.innerHTML = `
           <div class="card-top">
             <div class="card-title-row">
-              <span class="card-title" contenteditable="true" onblur="updateTitle('${col}', '${task.id}', this.innerText)">${escapeHtml(task.title)}</span>
+              <div class="title-left">
+                <span class="drag-handle" title="Drag card">⋮⋮</span>
+                <span class="card-title" 
+                      contenteditable="true" 
+                      onfocus="this.closest('.card').draggable = false"
+                      onblur="this.closest('.card').draggable = true; updateTitle('${col}', '${task.id}', this.innerText)">${escapeHtml(task.title)}</span>
+              </div>
               <button class="btn-card-del" onclick="deleteTask('${col}', '${task.id}')" title="Delete goal">✕</button>
             </div>
             ${task.timeframe ? `<div class="card-timeframe">🕒 ${escapeHtml(task.timeframe)}</div>` : ''}
@@ -816,11 +895,15 @@
           <div class="card-footer">
             <select class="status-pill ${getStatusClass(task.status)}" onchange="changeStatus('${col}', '${task.id}', this.value)">
               <option value="Not Started" ${task.status === 'Not Started' ? 'selected' : ''}>🪩 Not Started</option>
-              <option value="Started" ${task.status === 'Started' ? 'selected' : ''}>🌸 Started</option>
-              <option value="In Progress" ${task.status === 'In Progress' ? 'selected' : ''}>⚡ In Progress</option>
+              <option value="Started" ${task.status === 'Started' ? 'selected' : ''}>🌼 Started</option>
+              <option value="In Progress" ${task.status === 'In Progress' ? 'selected' : ''}>🌸 In Progress</option>
               <option value="Done" ${task.status === 'Done' ? 'selected' : ''}>✨ Done</option>
             </select>
-            <span class="category-pill">${tagLabel}</span>
+            <div class="move-group">
+              ${col !== 'small' ? `<button class="btn-move" onclick="shiftColumn('${col}', '${task.id}', -1)" title="Move Left">←</button>` : ''}
+              <span class="category-pill">${tagLabel}</span>
+              ${col !== 'future' ? `<button class="btn-move" onclick="shiftColumn('${col}', '${task.id}', 1)" title="Move Right">→</button>` : ''}
+            </div>
           </div>
         `;
 
@@ -833,6 +916,21 @@
   }
 
   /* Operations */
+  function shiftColumn(currentCol, taskId, direction) {
+    const currentIndex = COLS.indexOf(currentCol);
+    const targetIndex = currentIndex + direction;
+    if (targetIndex < 0 || targetIndex >= COLS.length) return;
+
+    const targetCol = COLS[targetIndex];
+    const taskIndex = boardData[currentCol].findIndex(t => t.id === taskId);
+    if (taskIndex > -1) {
+      const [movedTask] = boardData[currentCol].splice(taskIndex, 1);
+      boardData[targetCol].push(movedTask);
+      saveBoard();
+      renderBoard();
+    }
+  }
+
   function changeStatus(col, id, newStatus) {
     const task = boardData[col].find(t => t.id === id);
     if (task) {
@@ -945,7 +1043,7 @@
     return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
   }
 
-  /* Drag & Drop */
+  /* Drag & Drop Logic */
   let draggedCard = null;
 
   function attachDragEvents(card) {
@@ -975,13 +1073,15 @@
       const targetCol = colEl.dataset.col;
       const taskId = draggedCard.dataset.id;
 
+      if (sourceCol === targetCol) return;
+
       const taskIndex = boardData[sourceCol].findIndex(t => t.id === taskId);
-      const [movedTask] = boardData[sourceCol].splice(taskIndex, 1);
-
-      boardData[targetCol].push(movedTask);
-
-      saveBoard();
-      renderBoard();
+      if (taskIndex > -1) {
+        const [movedTask] = boardData[sourceCol].splice(taskIndex, 1);
+        boardData[targetCol].push(movedTask);
+        saveBoard();
+        renderBoard();
+      }
     });
   });
 
